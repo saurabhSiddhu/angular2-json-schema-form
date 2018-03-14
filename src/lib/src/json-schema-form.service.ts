@@ -119,8 +119,13 @@ export class JsonSchemaFormService {
     },
   };
 
-  evaluateDisabled = this._evaluate('disabled', false);
-  evaluateCondition = this._evaluate('condition', true);
+  evaluateDisabled = (layoutNode: any, dataIndex: number[]): boolean => {
+    return !!this.evaluate('disabled', false)(layoutNode, dataIndex);
+  };
+
+  evaluateCondition = (layoutNode: any, dataIndex: number[]): boolean => {
+    return !!this.evaluate('condition', true)(layoutNode, dataIndex);
+  };
 
   constructor() {
     this.setLanguage(this.language);
@@ -659,8 +664,8 @@ export class JsonSchemaFormService {
  * @param {string}  key          [description]
  * @param {boolean} defaultValue [description]
  */
-  _evaluate(key: string, defaultValue: boolean){
-    return (layoutNode: any, dataIndex: number[]): boolean=> {
+  evaluate(key: string, defaultValue: any){
+    return (layoutNode: any, dataIndex: number[]): any => {
       if(!hasValue((layoutNode.options || {})[key])){
         return defaultValue;
       }
@@ -672,12 +677,12 @@ export class JsonSchemaFormService {
           expression = expression.replace('[arrayIndex]', `[${arrayIndex}]`);
         }
         expression = JsonPointer.parseObjectPath(expression);
-        result = !!JsonPointer.get(this.data, expression);
+        result = JsonPointer.get(this.data, expression);
         if (!result && expression[0] === 'model') {
-          result = !!JsonPointer.get({ model: this.data }, expression);
+          result = JsonPointer.get({ model: this.data }, expression);
         }
       } else if(typeof expression === 'number' || typeof expression === 'boolean'){
-        result = !!expression;
+        result = expression;
       } else if (typeof expression === 'function') {
         result = expression(this.data);
       } else if (typeof expression.functionBody === 'string') {
@@ -687,7 +692,7 @@ export class JsonSchemaFormService {
           );
           result = dynFn(this.data, dataIndex);
         } catch (e) {
-          result = true;
+          result = defaultValue;
           console.error("condition functionBody errored out on evaluation: " + expression.functionBody);
         }
       }
