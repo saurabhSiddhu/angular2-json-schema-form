@@ -99,6 +99,7 @@ export function findDate(text) {
   if (foundDate) { return foundDate[0]; }
 }
 
+// TODO: Use moment.js if it's being used in future.
 /**
  * Validate supplied date.
  * @param {string | number | Date} date to be checked.
@@ -106,4 +107,10 @@ export function findDate(text) {
 export function isValidDate(date): boolean {
   date = new Date(date);
   return !Number.isNaN(date.getTime());
+}
+
+// Returns a new date without timezone information.
+// https://stackoverflow.com/a/38050824/2879146
+export function dateWithoutTimeZone(date = new Date()){
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 }
