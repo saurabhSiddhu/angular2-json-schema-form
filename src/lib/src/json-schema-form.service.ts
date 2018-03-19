@@ -23,6 +23,7 @@ import {
 import { buildLayout, getLayoutNode } from './shared/layout.functions';
 import { enValidationMessages } from './locale/en-validation-messages';
 import { frValidationMessages } from './locale/fr-validation-messages';
+import { CUSTOM_AJV_KEYWORDS } from './shared/custom-ajv.keywords';
 
 export interface TitleMapItem {
   name?: string, value?: any, checked?: boolean, group?: string, items?: TitleMapItem[]
@@ -39,7 +40,7 @@ export class JsonSchemaFormService {
   AngularSchemaFormCompatibility = false;
   tpldata: any = {};
 
-  ajvOptions: any = { allErrors: true, jsonPointers: true, unknownFormats: 'ignore' };
+  ajvOptions: any = { allErrors: true, jsonPointers: true, unknownFormats: 'ignore', $data: true };
   ajv: any = new Ajv(this.ajvOptions); // AJV: Another JSON Schema Validator
   validateFormData: any = null; // Compiled AJV function to validate active form's schema
 
@@ -129,6 +130,7 @@ export class JsonSchemaFormService {
 
   constructor() {
     this.setLanguage(this.language);
+    this.addCustomAjvKeywords(CUSTOM_AJV_KEYWORDS);
   }
 
   setLanguage(language: string = 'en-US') {
@@ -137,6 +139,12 @@ export class JsonSchemaFormService {
       frValidationMessages : enValidationMessages;
     this.defaultFormOptions.defautWidgetOptions.validationMessages =
       _.cloneDeep(validationMessages);
+  }
+
+  addCustomAjvKeywords(keywords) {
+    keywords.forEach((keyword) => {
+      this.ajv.addKeyword(keyword.name, keyword.definition);
+    });
   }
 
   getData() { return this.data; }

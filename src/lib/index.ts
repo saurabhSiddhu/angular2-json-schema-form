@@ -27,7 +27,7 @@ export {
 export {
   buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap
 } from './src/shared/layout.functions';
-export { dateToString, stringToDate, findDate } from './src/shared/date.functions';
+export { dateToString, stringToDate, findDate, isValidDate } from './src/shared/date.functions';
 export { OrderableDirective } from './src/shared/orderable.directive';
 
 export { JsonSchemaFormComponent } from './src/json-schema-form.component';

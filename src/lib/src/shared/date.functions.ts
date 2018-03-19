@@ -98,3 +98,12 @@ export function findDate(text) {
   foundDate = text.match(/^(?:19|20)\d\d(?:0\d|1[012])(?:[012]\d|3[01])/);
   if (foundDate) { return foundDate[0]; }
 }
+
+/**
+ * Validate supplied date.
+ * @param {string | number | Date} date to be checked.
+ */
+export function isValidDate(date): boolean {
+  date = new Date(date);
+  return !Number.isNaN(date.getTime());
+}

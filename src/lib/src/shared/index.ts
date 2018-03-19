@@ -39,6 +39,8 @@ export {
   buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap
 } from './layout.functions';
 
-export { dateToString, stringToDate, findDate } from './date.functions';
+export { dateToString, stringToDate, findDate, isValidDate } from './date.functions';
 
 export { OrderableDirective } from './orderable.directive';
+
+export { CUSTOM_AJV_KEYWORDS } from './custom-ajv.keywords';
