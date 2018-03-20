@@ -39,7 +39,7 @@ export {
   buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap
 } from './layout.functions';
 
-export { dateToString, stringToDate, findDate, isValidDate, dateWithoutTimeZone } from './date.functions';
+export { dateToString, stringToDate, findDate, isValidDate, dateWithoutTime } from './date.functions';
 
 export { OrderableDirective } from './orderable.directive';
 

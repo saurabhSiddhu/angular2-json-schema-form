@@ -109,8 +109,7 @@ export function isValidDate(date): boolean {
   return !Number.isNaN(date.getTime());
 }
 
-// Returns a new date without timezone information.
-// https://stackoverflow.com/a/38050824/2879146
-export function dateWithoutTimeZone(date = new Date()){
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+// Returns a new date without time information.
+export function dateWithoutTime(date = new Date()){
+  return new Date(date.toDateString());
 }

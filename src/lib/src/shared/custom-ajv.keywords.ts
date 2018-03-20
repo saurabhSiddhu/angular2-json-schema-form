@@ -1,4 +1,4 @@
-import { isValidDate, dateWithoutTimeZone } from './date.functions';
+import { isValidDate, dateWithoutTime } from './date.functions';
 /**
  * Custom Ajv keywords for validation.
  * https://epoberezkin.github.io/ajv/custom.html
@@ -28,8 +28,8 @@ export const CUSTOM_AJV_KEYWORDS = [
 					return true;
 				}
 				// Removing timezone.
-				schemaDate = dateWithoutTimeZone(schemaDate);
-				date = dateWithoutTimeZone(date);
+				schemaDate = dateWithoutTime(schemaDate);
+				date = dateWithoutTime(date);
 				if(parentSchema.exclusiveMinDate) {
 					return schemaDate.getTime() < date.getTime();
 				}
@@ -60,8 +60,8 @@ export const CUSTOM_AJV_KEYWORDS = [
 					return true;
 				}
 				// Removing timezone.
-				schemaDate = dateWithoutTimeZone(schemaDate);
-				date = dateWithoutTimeZone(date);
+				schemaDate = dateWithoutTime(schemaDate);
+				date = dateWithoutTime(date);
 				if(parentSchema.exclusiveMaxDate) {
 					return schemaDate.getTime() > date.getTime();
 				}
