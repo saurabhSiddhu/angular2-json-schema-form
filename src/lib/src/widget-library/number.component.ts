@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
+import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
@@ -18,7 +21,6 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [attr.max]="options?.maximum"
         [attr.min]="options?.minimum"
         [attr.placeholder]="options?.placeholder"
-        [attr.disabled]="controlDisabled ? '' : null"
         [attr.required]="options?.required"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
         [attr.step]="options?.multipleOf || options?.step || 'any'"
@@ -62,6 +64,8 @@ export class NumberComponent implements OnInit {
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
 
+  private dataChanges$: Subscription;
+
   constructor(
     private jsf: JsonSchemaFormService
   ) { }
@@ -70,6 +74,20 @@ export class NumberComponent implements OnInit {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
     if (this.layoutNode.dataType === 'integer') { this.allowDecimal = false; }
+
+    this.dataChanges$ =
+      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+        .subscribe((values) => {
+          if (this.controlDisabled) {
+            this.formControl.disable();
+          } else {
+            this.formControl.enable();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.dataChanges$.unsubscribe();
   }
 
   get controlDisabled(): boolean {

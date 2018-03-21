@@ -1,5 +1,8 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
+import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import { dateToString, hasOwn, stringToDate } from '../../shared';
@@ -57,18 +60,19 @@ import { dateToString, hasOwn, stringToDate } from '../../shared';
       .mat-form-field-infix { width: initial; }
   `],
 })
-export class MaterialDatepickerComponent implements OnInit, OnChanges {
+export class MaterialDatepickerComponent implements OnInit, OnChanges, OnDestroy {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
   dateValue: any;
-  controlDisabled = false;
   boundControl = false;
   options: any;
   autoCompleteList: string[] = [];
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
+
+  private dataChanges$: Subscription;
 
   constructor(
     private jsf: JsonSchemaFormService
@@ -81,6 +85,24 @@ export class MaterialDatepickerComponent implements OnInit, OnChanges {
     if (!this.options.notitle && !this.options.description && this.options.placeholder) {
       this.options.description = this.options.placeholder;
     }
+
+    this.dataChanges$ =
+      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+        .subscribe((values) => {
+          if (this.controlDisabled) {
+            this.formControl.disable();
+          } else {
+            this.formControl.enable();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.dataChanges$.unsubscribe();
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
   }
 
   ngOnChanges() {

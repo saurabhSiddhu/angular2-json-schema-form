@@ -20,7 +20,6 @@ import { hasOwn } from '../shared/utility.functions';
         [type]="layoutNode?.type"
         [value]="controlValue"
         (click)="updateValue($event)">
-        {{controlDisabled}}
     </div>`,
 })
 export class SubmitComponent implements OnInit {
@@ -41,19 +40,19 @@ export class SubmitComponent implements OnInit {
   ngOnInit() {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
-    if (hasOwn(this.options, 'disabled')) {
-      this._controlDisabled = this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
-    } else if (this.jsf.formOptions.disableInvalidSubmit) {
+
+    if (this.jsf.formOptions.disableInvalidSubmit) {
       this._controlDisabled = !this.jsf.isValid;
       this.jsf.isValidChanges.subscribe(isValid => this._controlDisabled = !isValid);
     }
+
     if (this.controlValue === null || this.controlValue === undefined) {
       this.controlValue = this.options.title;
     }
   }
 
   get controlDisabled(): boolean {
-    return this._controlDisabled || this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex) || this._controlDisabled;
   }
 
   updateValue(event) {

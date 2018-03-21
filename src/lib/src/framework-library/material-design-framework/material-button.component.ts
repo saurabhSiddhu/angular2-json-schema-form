@@ -28,7 +28,7 @@ export class MaterialButtonComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled = false;
+  _controlDisabled = false;
   boundControl = false;
   options: any;
   @Input() layoutNode: any;
@@ -42,12 +42,15 @@ export class MaterialButtonComponent implements OnInit {
   ngOnInit() {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
-    if (hasOwn(this.options, 'disabled')) {
-      this.controlDisabled = this.options.disabled;
-    } else if (this.jsf.formOptions.disableInvalidSubmit) {
-      this.controlDisabled = !this.jsf.isValid;
-      this.jsf.isValidChanges.subscribe(isValid => this.controlDisabled = !isValid);
+
+    if (this.jsf.formOptions.disableInvalidSubmit) {
+      this._controlDisabled = !this.jsf.isValid;
+      this.jsf.isValidChanges.subscribe(isValid => this._controlDisabled = !isValid);
     }
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex) || this._controlDisabled ;
   }
 
   updateValue(event) {

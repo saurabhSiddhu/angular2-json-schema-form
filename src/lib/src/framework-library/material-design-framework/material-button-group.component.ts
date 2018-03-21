@@ -39,7 +39,6 @@ export class MaterialButtonGroupComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled = false;
   boundControl = false;
   options: any;
   radiosList: any[] = [];
@@ -59,6 +58,10 @@ export class MaterialButtonGroupComponent implements OnInit {
       this.options.enum, true
     );
     this.jsf.initializeControl(this);
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
   }
 
   updateValue(value) {

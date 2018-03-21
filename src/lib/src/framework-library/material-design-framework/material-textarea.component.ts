@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
+import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 
@@ -55,16 +58,17 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
       .mat-form-field-infix { width: initial; }
   `],
 })
-export class MaterialTextareaComponent implements OnInit {
+export class MaterialTextareaComponent implements OnInit, OnDestroy {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled = false;
   boundControl = false;
   options: any;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
+
+  private dataChanges$: Subscription;
 
   constructor(
     private jsf: JsonSchemaFormService
@@ -76,6 +80,24 @@ export class MaterialTextareaComponent implements OnInit {
     if (!this.options.notitle && !this.options.description && this.options.placeholder) {
       this.options.description = this.options.placeholder;
     }
+
+    this.dataChanges$ =
+      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+        .subscribe((values) => {
+          if (this.controlDisabled) {
+            this.formControl.disable();
+          } else {
+            this.formControl.enable();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.dataChanges$.unsubscribe();
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
   }
 
   updateValue(event) {

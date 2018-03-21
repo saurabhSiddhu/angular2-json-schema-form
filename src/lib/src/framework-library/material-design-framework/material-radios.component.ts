@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
+import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import { buildTitleMap } from '../../shared';
@@ -53,11 +56,10 @@ import { buildTitleMap } from '../../shared';
     mat-error { font-size: 75%; }
   `]
 })
-export class MaterialRadiosComponent implements OnInit {
+export class MaterialRadiosComponent implements OnInit, OnDestroy {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled = false;
   boundControl = false;
   options: any;
   flexDirection = 'column';
@@ -65,6 +67,8 @@ export class MaterialRadiosComponent implements OnInit {
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
+
+  private dataChanges$: Subscription;
 
   constructor(
     private jsf: JsonSchemaFormService
@@ -80,6 +84,25 @@ export class MaterialRadiosComponent implements OnInit {
       this.options.enum, true
     );
     this.jsf.initializeControl(this, !this.options.readonly);
+
+
+    this.dataChanges$ =
+      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+        .subscribe((values) => {
+          if (this.controlDisabled) {
+            this.formControl.disable();
+          } else {
+            this.formControl.enable();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.dataChanges$.unsubscribe();
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
   }
 
   updateValue(value) {

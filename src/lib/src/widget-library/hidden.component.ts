@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/distinctUntilChanged';
+import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
@@ -8,7 +11,6 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   template: `
     <input *ngIf="boundControl"
       [formControl]="formControl"
-      [attr.disabled]="controlDisabled ? '' : null"
       [id]="'control' + layoutNode?._id"
       [name]="controlName"
       type="hidden">
@@ -19,7 +21,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
       type="hidden"
       [value]="controlValue">`,
 })
-export class HiddenComponent implements OnInit {
+export class HiddenComponent implements OnInit, OnDestroy {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
@@ -28,12 +30,28 @@ export class HiddenComponent implements OnInit {
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
 
+  private dataChanges$: Subscription;
+
   constructor(
     private jsf: JsonSchemaFormService
   ) { }
 
   ngOnInit() {
     this.jsf.initializeControl(this);
+
+    this.dataChanges$ =
+      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+        .subscribe((values) => {
+          if (this.controlDisabled) {
+            this.formControl.disable();
+          } else {
+            this.formControl.enable();
+          }
+        });
+  }
+
+  ngOnDestroy() {
+    this.dataChanges$.unsubscribe();
   }
 
   get controlDisabled(): boolean {
