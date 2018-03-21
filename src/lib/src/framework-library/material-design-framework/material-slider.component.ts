@@ -59,13 +59,11 @@ export class MaterialSliderComponent implements OnInit, OnDestroy {
 
     this.dataChanges$ =
       this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
-        .subscribe((values) => {
-          if (this.controlDisabled) {
-            this.formControl.disable();
-          } else {
-            this.formControl.enable();
-          }
-        });
+        .subscribe((values) => { this.updateDisabled(); });
+
+    // Ugly hack to disable field after rendering.
+    // TODO: Try to do this is in buildFormGroupTemplate.
+    setTimeout(() => { this.updateDisabled(); });
   }
 
   ngOnDestroy() {
@@ -79,5 +77,10 @@ export class MaterialSliderComponent implements OnInit, OnDestroy {
   updateValue(event) {
     this.options.showErrors = true;
     this.jsf.updateValue(this, event.value);
+  }
+
+  updateDisabled() {
+    if (this.controlDisabled) { this.formControl.disable(); }
+    else { this.formControl.enable(); }
   }
 }

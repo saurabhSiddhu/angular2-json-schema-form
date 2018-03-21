@@ -55,7 +55,6 @@ export class MaterialCheckboxesComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
-  controlDisabled = false;
   boundControl = false;
   options: any;
   horizontalList = false;
@@ -92,6 +91,10 @@ export class MaterialCheckboxesComponent implements OnInit {
   get someChecked(): boolean {
     const checkedItems = this.checkboxList.filter(t => t.checked).length;
     return checkedItems > 0 && checkedItems < this.checkboxList.length;
+  }
+
+  get controlDisabled(): boolean {
+    return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
   }
 
   updateValue() {

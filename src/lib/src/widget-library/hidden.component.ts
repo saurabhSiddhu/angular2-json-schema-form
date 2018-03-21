@@ -41,13 +41,11 @@ export class HiddenComponent implements OnInit, OnDestroy {
 
     this.dataChanges$ =
       this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
-        .subscribe((values) => {
-          if (this.controlDisabled) {
-            this.formControl.disable();
-          } else {
-            this.formControl.enable();
-          }
-        });
+        .subscribe((values) => { this.updateDisabled(); });
+
+    // Ugly hack to disable field after rendering.
+    // TODO: Try to do this is in buildFormGroupTemplate.
+    setTimeout(() => { this.updateDisabled(); });
   }
 
   ngOnDestroy() {
@@ -56,5 +54,10 @@ export class HiddenComponent implements OnInit, OnDestroy {
 
   get controlDisabled(): boolean {
     return this.jsf.evaluateDisabled(this.layoutNode, this.dataIndex);
+  }
+
+  updateDisabled() {
+    if (this.controlDisabled) { this.formControl.disable(); }
+    else { this.formControl.enable(); }
   }
 }

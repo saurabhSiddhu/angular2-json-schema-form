@@ -67,13 +67,11 @@ export class CheckboxComponent implements OnInit, OnDestroy {
 
     this.dataChanges$ =
       this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
-        .subscribe((values) => {
-          if (this.controlDisabled) {
-            this.formControl.disable();
-          } else {
-            this.formControl.enable();
-          }
-        });
+        .subscribe((values) => { this.updateDisabled(); });
+
+    // Ugly hack to disable field after rendering.
+    // TODO: Try to do this is in buildFormGroupTemplate.
+    setTimeout(() => { this.updateDisabled(); });
   }
 
   ngOnDestroy() {
@@ -91,5 +89,10 @@ export class CheckboxComponent implements OnInit, OnDestroy {
 
   get isChecked() {
     return this.jsf.getFormControlValue(this) === this.trueValue;
+  }
+
+  updateDisabled() {
+    if (this.controlDisabled) { this.formControl.disable(); }
+    else { this.formControl.enable(); }
   }
 }
