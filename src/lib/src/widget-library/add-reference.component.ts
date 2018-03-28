@@ -7,6 +7,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   selector: 'add-reference-widget',
   template: `
     <button *ngIf="showAddButton"
+      type="button"
       [class]="options?.fieldHtmlClass || ''"
       [disabled]="options?.readonly"
       (click)="addItem($event)">
