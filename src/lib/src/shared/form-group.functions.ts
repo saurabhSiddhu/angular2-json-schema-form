@@ -92,6 +92,15 @@ export function buildFormGroupTemplate(
       nodeOptions.set('templateType', controlType);
     }
   }
+
+  // Recursively finds the find layout node using data pointer and returns
+  // the ngModelOptions which are being treated as control options.
+  const getControlOptions = (layout: any[], dPointer:string) => {
+    if(isEmpty(layout)) return {};
+    const node = layout.find((n) => n.dataPointer === dPointer ? n : getControlOptions(n.items, dPointer));
+    return node ? node.options.ngModelOptions : {};
+  };
+
   let controls: any;
   let validators = getControlValidators(schema);
   switch (controlType) {
@@ -123,7 +132,7 @@ export function buildFormGroupTemplate(
           ));
         jsf.formOptions.fieldsRequired = setRequiredFields(schema, controls);
       }
-      return { controlType, controls, validators };
+      return { controlType, controls, validators, ...getControlOptions(jsf.layout, dataPointer) };
 
     case 'FormArray':
       controls = [];
@@ -224,7 +233,7 @@ export function buildFormGroupTemplate(
           }
         }
       }
-      return { controlType, controls, validators };
+      return { controlType, controls, validators,  ...getControlOptions(jsf.layout, dataPointer) };
 
     case '$ref':
       const schemaRef = JsonPointer.compile(schema.$ref);
@@ -249,7 +258,7 @@ export function buildFormGroupTemplate(
         value: setValues && isPrimitive(nodeValue) ? nodeValue : null,
         disabled: nodeOptions.get('disabled') || false
       };
-      return { controlType, value, validators };
+      return { controlType, value, validators, ...getControlOptions(jsf.layout, dataPointer) };
 
     default:
       return null;
@@ -278,6 +287,12 @@ export function buildFormGroup(template: any): AbstractControl {
         JsonValidators.compose(validatorFns) : validatorFns[0];
     }
   }
+  // Abstract control options.
+  // https://angular.io/api/forms/AbstractControlOptions
+  const options = {
+    validators: validatorFns,
+    updateOn: template.updateOn
+  };
   if (hasOwn(template, 'controlType')) {
     switch (template.controlType) {
       case 'FormGroup':
@@ -286,13 +301,13 @@ export function buildFormGroup(template: any): AbstractControl {
           let newControl: AbstractControl = buildFormGroup(controls);
           if (newControl) { groupControls[key] = newControl; }
         });
-        return new FormGroup(groupControls, validatorFn);
+        return new FormGroup(groupControls, {...options});
       case 'FormArray':
         return new FormArray(_.filter(_.map(template.controls,
           controls => buildFormGroup(controls)
-        )), validatorFn);
+        )), {...options});
       case 'FormControl':
-        return new FormControl(template.value, validatorFns);
+        return new FormControl(template.value, {...options});
     }
   }
   return null;

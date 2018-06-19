@@ -116,7 +116,10 @@ export class JsonSchemaFormService {
       disabled: false, // Set control as disabled? (not editable, and excluded from output)
       readonly: false, // Set control as read only? (not editable, but included in output)
       returnEmptyFields: true, // return values for fields that contain no data?
-      validationMessages: {} // set by setLanguage()
+      validationMessages: {}, // set by setLanguage()
+      ngModelOptions: {
+        updateOn : 'change'
+      }
     },
   };
 
@@ -416,6 +419,9 @@ export class JsonSchemaFormService {
     ctx.formControl = this.getFormControl(ctx);
     ctx.boundControl = bind && !!ctx.formControl;
     if (ctx.formControl) {
+      // TODO: Set control update strategy here based on layout node options
+      // when angular has support for it. Refer Abstract control for more details
+      // https://github.com/angular/angular/blob/0cb4f12a7a57087ec4e8329a04d5dfc430764b45/packages/forms/src/model.ts#L128
       ctx.controlName = this.getFormControlName(ctx);
       ctx.controlValue = ctx.formControl.value;
       ctx.options.errorMessage = ctx.formControl.status === 'VALID' ? null :
