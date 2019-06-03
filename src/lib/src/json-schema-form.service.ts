@@ -713,4 +713,16 @@ export class JsonSchemaFormService {
       return result;
     }
   }
+  evaluateFunctionBody(fn, dataIndex){
+    let result;
+    try {
+      const dynFn = new Function(
+        'model', 'arrayIndices', fn
+      );
+      result = dynFn(this.data, dataIndex);
+    } catch (e) {
+      console.error("condition functionBody errored out on evaluation: " + fn);
+    }
+    return result;
+  }
 }
