@@ -1,18 +1,14 @@
-import { Component, Input, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/distinctUntilChanged';
-import * as _ from 'lodash';
-
 import { JsonSchemaFormService } from '../json-schema-form.service';
 import { isArray } from './../shared/validator.functions';
-import { capitalCase } from './../shared/validator.functions';
+import { FormBehaviourActionService } from '../shared/form-behaviour-action.service';
 
 @Component({
   selector: 'textarea-widget',
   template: `
     <div
-      [class]="options?.htmlClass || ''"  [ngClass]="{'is-error': isConditionalRequired && isRequired && !controlValue}">
+      [class]="options?.htmlClass || ''"  >
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
@@ -26,9 +22,9 @@ import { capitalCase } from './../shared/validator.functions';
         [attr.pattern]="options?.pattern"
         [attr.placeholder]="options?.placeholder"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
-        [attr.required]= "isRequired"
         [class]="options?.fieldHtmlClass || ''"
         [id]="'control' + layoutNode?._id"
+        (change)="handleChange($event)"
         [name]="controlName"></textarea>
       <textarea *ngIf="!boundControl"
         [attr.aria-describedby]="'control' + layoutNode?._id + 'Status'"
@@ -37,84 +33,62 @@ import { capitalCase } from './../shared/validator.functions';
         [attr.pattern]="options?.pattern"
         [attr.placeholder]="options?.placeholder"
         [attr.readonly]="options?.readonly ? 'readonly' : null"
-        [attr.required]= "isRequired"
         [class]="options?.fieldHtmlClass || ''"
-        [disabled]="controlDisabled"
         [id]="'control' + layoutNode?._id"
         [name]="controlName"
         [value]="controlValue"
         (input)="updateValue($event)">{{controlValue}}</textarea>
-        <span *ngIf="isConditionalRequired && isRequired && !controlValue" class="info-3 text-danger">
-          {{options?.validationMessages?.required}}
-        </span>
     </div>`,
 })
-export class TextareaComponent implements OnInit, OnDestroy {
-  formControl: AbstractControl;
+export class TextareaComponent implements OnInit, AfterViewInit {
+ formControl: AbstractControl;
   controlName: string;
-  controlValue: any;
-  isRequired: boolean;
-  isConditionalRequired: boolean = false;
+  controlValue: string;
   boundControl = false;
   options: any;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
 
-  private dataChanges$: Subscription;
 
   constructor(
     private jsf: JsonSchemaFormService,
-    private element: ElementRef
+    private formBehaviourActionService: FormBehaviourActionService
   ) { }
 
   ngOnInit() {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
-    this.isRequired = this.options.required;
-
-    if (isArray(this.options.formBehaviourConditions) && this.options.formBehaviourConditions.length > 0) {
-      this.dataChanges$ =
-        this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
-          .subscribe(() => { this.handleBehaviourChanges(); });
-      // Ugly hack to disable field after rendering.
-      // TODO: Try to do this is in buildFormGroupTemplate.
-      setTimeout(() => { this.handleBehaviourChanges(); });
-      this.isConditionalRequired = !!this.options.formBehaviourConditions
-        .find((option) => { return option.type === 'required' });
+  }
+  ngAfterViewInit() {
+    if (this.isformBehaviourAction) {
+      setTimeout(() => {
+        this.formBehaviourActionService.initActions(
+          this.options.formBehaviourActions,
+          this.controlValue,
+          this.jsf.formGroup
+        );
+      });
     }
   }
-
-  ngOnDestroy() {
-    if (this.dataChanges$) {
-      this.dataChanges$.unsubscribe();
-    }
+  updateValue(event) {
+    this.jsf.updateValue(this, event.target.value);
+    this.handleChange(event);
   }
-
-  handleBehaviourChanges() {
-    this.options.formBehaviourConditions.forEach(condition => {
-      this['handle' + capitalCase(condition.type)](condition.functionBody)
-    });
+  get isformBehaviourAction() {
+    return (
+      this.jsf.formOptions.activateFormBehaviourActions &&
+      isArray(this.options.formBehaviourActions) &&
+      this.options.formBehaviourActions.length > 0
+    );
   }
-  handleDisable(fn: string): void {
-    if (this.jsf.evaluateFunctionBody(fn, this.dataIndex)) {
-      this.formControl.disable();
-    } else {
-      this.formControl.enable();
-    }
-  }
-  handleRequired(fn: string): void {
-    this.isRequired = this.jsf.evaluateFunctionBody(fn, this.dataIndex) ? false : true;
-    if (this.isRequired) {
-      this.element.nativeElement.closest('.form-group').classList.add('isRequired');
-    } else {
-      this.element.nativeElement.closest('.form-group').classList.remove('isRequired');
-    }
-  }
-
-  handleValue(fn: string): void { 
-    if (this.jsf.evaluateFunctionBody(fn, this.dataIndex)) {
-      this.jsf.updateValue(this, null);
+  handleChange($event) {
+    if (this.isformBehaviourAction) {
+      this.formBehaviourActionService.initActions(
+        this.options.formBehaviourActions,
+        $event.target.value,
+        this.jsf.formGroup
+      );
     }
   }
 }
