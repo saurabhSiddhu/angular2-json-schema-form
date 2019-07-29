@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { Subscription } from 'rxjs';
+
 import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import { hasOwn } from './../../shared/utility.functions';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'material-checkbox-widget',
@@ -106,7 +107,7 @@ export class MaterialCheckboxComponent implements OnInit, OnDestroy {
     }
 
     this.dataChanges$ =
-      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+      this.jsf.dataChanges.pipe(distinctUntilChanged((current, prev) => _.isEqual(current, prev)))
         .subscribe((values) => { this.updateDisabled(); });
 
     // Ugly hack to disable field after rendering.

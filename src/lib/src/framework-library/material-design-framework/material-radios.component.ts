@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/distinctUntilChanged';
+import { Subscription } from 'rxjs';
+
 import * as _ from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import { buildTitleMap } from '../../shared';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'material-radios-widget',
@@ -87,7 +88,7 @@ export class MaterialRadiosComponent implements OnInit, OnDestroy {
 
 
     this.dataChanges$ =
-      this.jsf.dataChanges.distinctUntilChanged((current, prev) => _.isEqual(current, prev))
+      this.jsf.dataChanges.pipe(distinctUntilChanged((current, prev) => _.isEqual(current, prev)))
         .subscribe((values) => { this.updateDisabled(); });
 
     // Ugly hack to disable field after rendering.

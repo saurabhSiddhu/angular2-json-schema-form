@@ -4,7 +4,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-import 'rxjs/add/operator/map';
+
 
 import { Examples } from './example-schemas.model';
 import { JsonPointer } from '../../lib/src/shared';
@@ -43,7 +43,7 @@ export class DemoComponent implements OnInit {
   selectedSetName = '';
   selectedExample = 'ng-jsf-flex-layout';
   selectedExampleName = 'Flexbox layout';
-  selectedFramework = 'material-design';
+  selectedFramework = 'bootstrap-3';
   selectedLanguage = 'en';
   visible: { [item: string]: boolean } = {
     options: true,
@@ -64,6 +64,7 @@ export class DemoComponent implements OnInit {
     returnEmptyFields: false, // Don't return values for empty input fields
     setSchemaDefaults: true, // Always use schema defaults for empty fields
     defautWidgetOptions: { feedback: true }, // Show inline feedback icons
+    activateConditionallyRequired: true
   };
   liveFormData: any = {};
   formValidationErrors: any;
@@ -180,7 +181,7 @@ export class DemoComponent implements OnInit {
       this.formIsValid = null;
       this.formValidationErrors = null;
     }
-    const exampleURL = `assets/example-schemas/${this.selectedExample}.json`;
+    const exampleURL = `assets/example-schemas/employment.json`;
     this.http
       .get(exampleURL, { responseType: 'text' })
       .subscribe(schema => {

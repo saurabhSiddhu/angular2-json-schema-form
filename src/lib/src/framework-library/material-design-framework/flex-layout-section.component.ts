@@ -28,11 +28,10 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
         [style.justify-content]="getFlexAttribute('justify-content')"
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
-        [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
-        [fxLayoutGap]="options?.fxLayoutGap"
-        [fxLayoutAlign]="options?.fxLayoutAlign"
-        [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
+       
+        
+      
+        ></flex-layout-root-widget>
       <mat-error *ngIf="options?.showErrors && options?.errorMessage"
         [innerHTML]="options?.errorMessage"></mat-error>
     </div>
@@ -59,11 +58,7 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
         [style.justify-content]="getFlexAttribute('justify-content')"
         [style.align-items]="getFlexAttribute('align-items')"
         [style.align-content]="getFlexAttribute('align-content')"
-        [fxLayout]="options?.fxLayout"
-        [fxLayoutWrap]="options?.fxLayoutWrap"
-        [fxLayoutGap]="options?.fxLayoutGap"
-        [fxLayoutAlign]="options?.fxLayoutAlign"
-        [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
+       ></flex-layout-root-widget>
       <mat-error *ngIf="options?.showErrors && options?.errorMessage"
         [innerHTML]="options?.errorMessage"></mat-error>
     </fieldset>
@@ -93,11 +88,7 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
             [style.justify-content]="getFlexAttribute('justify-content')"
             [style.align-items]="getFlexAttribute('align-items')"
             [style.align-content]="getFlexAttribute('align-content')"
-            [fxLayout]="options?.fxLayout"
-            [fxLayoutWrap]="options?.fxLayoutWrap"
-            [fxLayoutGap]="options?.fxLayoutGap"
-            [fxLayoutAlign]="options?.fxLayoutAlign"
-            [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
+           ></flex-layout-root-widget>
           </fieldset>
       </mat-card-content>
       <mat-card-footer>
@@ -131,11 +122,7 @@ import { JsonSchemaFormService } from '../../json-schema-form.service';
           [style.justify-content]="getFlexAttribute('justify-content')"
           [style.align-items]="getFlexAttribute('align-items')"
           [style.align-content]="getFlexAttribute('align-content')"
-          [fxLayout]="options?.fxLayout"
-          [fxLayoutWrap]="options?.fxLayoutWrap"
-          [fxLayoutGap]="options?.fxLayoutGap"
-          [fxLayoutAlign]="options?.fxLayoutAlign"
-          [attr.fxFlexFill]="options?.fxLayoutAlign"></flex-layout-root-widget>
+          ></flex-layout-root-widget>
       </fieldset>
       <mat-error *ngIf="options?.showErrors && options?.errorMessage"
         [innerHTML]="options?.errorMessage"></mat-error>
@@ -212,6 +199,9 @@ export class FlexLayoutSectionComponent implements OnInit {
           this.options[attribute] || ['column', 'nowrap'][index];
       case 'justify-content': case 'align-items': case 'align-content':
         return this.options[attribute];
+      case 'layout':
+        return (this.options.fxLayout || 'row') +
+        this.options.fxLayoutWrap ? ' ' + this.options.fxLayoutWrap : '';
     }
   }
 }

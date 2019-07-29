@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+
 import {
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule,
   MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatExpansionModule,
@@ -32,7 +32,7 @@ import { MaterialDesignFramework } from './material-design.framework';
 
 @NgModule({
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule, FlexLayoutModule,
+    CommonModule, FormsModule, ReactiveFormsModule,
     ...ANGULAR_MATERIAL_MODULES, WidgetLibraryModule
   ],
   declarations:    [ ...MATERIAL_FRAMEWORK_COMPONENTS ],

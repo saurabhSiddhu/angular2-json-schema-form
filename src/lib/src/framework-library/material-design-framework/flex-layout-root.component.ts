@@ -13,10 +13,7 @@ import { hasValue, JsonPointer } from '../../shared';
       [style.flex-basis]="getFlexAttribute(layoutNode, 'flex-basis')"
       [style.align-self]="(layoutNode?.options || {})['align-self']"
       [style.order]="layoutNode?.options?.order"
-      [fxFlex]="layoutNode?.options?.fxFlex"
-      [fxFlexOrder]="layoutNode?.options?.fxFlexOrder"
-      [fxFlexOffset]="layoutNode?.options?.fxFlexOffset"
-      [fxFlexAlign]="layoutNode?.options?.fxFlexAlign">
+      >
       <select-framework-widget *ngIf="showWidget(layoutNode)"
         [dataIndex]="layoutNode?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
         [layoutIndex]="(layoutIndex || []).concat(i)"
