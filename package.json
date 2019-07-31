@@ -63,7 +63,6 @@
     "@angular/cdk": ">=5.0.0",
     "@angular/common": ">=4.0.0",
     "@angular/core": ">=4.0.0",
-    "@angular/flex-layout": ">=2.0.0",
     "@angular/forms": ">=4.0.0",
     "@angular/material": ">=5.0.0",
     "@angular/platform-browser": ">=4.0.0"
