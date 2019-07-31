@@ -1,9 +1,9 @@
 {
-  "name": "angular2-json-schema-form",
-  "version": "0.7.0-alpha.1",
+  "name": "greytip-angular2-json-schema-form",
+  "version": "0.8.0",
   "author": {
-    "name": "David Schnell-Davis",
-    "email": "dschnelldavis@gmail.com"
+    "name": "Sourabh",
+    "email": "sourabh.siddhu@gmail.com"
   },
   "description": "Angular JSON Schema Form builder",
   "keywords": [
@@ -23,10 +23,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dschnelldavis/angular2-json-schema-form"
+    "url": "git+https://github.com/saurabhSiddhu/angular2-json-schema-form"
   },
   "bugs": {
-    "url": "https://github.com/dschnelldavis/angular2-json-schema-form/issues"
+    "url": "https://github.com/saurabhSiddhu/angular2-json-schema-form/issues"
   },
   "main": "./bundles/angular2-json-schema-form.umd.js",
   "module": "./angular2-json-schema-form.es5.js",
