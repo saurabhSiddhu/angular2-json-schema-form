@@ -108,6 +108,41 @@
           }
         }
       }
+    },
+    "greytip-angular-json-schema": {
+      "root": "projects/greytip-angular-json-schema",
+      "sourceRoot": "projects/greytip-angular-json-schema/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/greytip-angular-json-schema/tsconfig.lib.json",
+            "project": "projects/greytip-angular-json-schema/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/greytip-angular-json-schema/src/test.ts",
+            "tsConfig": "projects/greytip-angular-json-schema/tsconfig.spec.json",
+            "karmaConfig": "projects/greytip-angular-json-schema/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/greytip-angular-json-schema/tsconfig.lib.json",
+              "projects/greytip-angular-json-schema/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "angular2-json-schema-form",

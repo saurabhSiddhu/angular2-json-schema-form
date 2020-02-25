@@ -1,6 +1,6 @@
 {
-  "name": "greytip-angular2-json-schema-form",
-  "version": "0.8.0",
+  "name": "angular2-json-schema-form",
+  "version": "1.0.0",
   "author": {
     "name": "Sourabh",
     "email": "sourabh.siddhu@gmail.com"
@@ -57,31 +57,28 @@
   "dependencies": {
     "ajv": "^6.0.1",
     "lodash": "^4.17.15",
-    "tslib": "^1.9.0"
+    "tslib": "^1.11.0"
   },
   "peerDependencies": {
     "@angular/cdk": ">=5.0.0",
-    "@angular/common": ">=4.0.0",
-    "@angular/core": ">=4.0.0",
-    "@angular/forms": ">=4.0.0",
-    "@angular/material": ">=5.0.0",
-    "@angular/platform-browser": ">=4.0.0"
+    "@angular/material": ">=5.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.4",
-    "@angular/animations": "^7.2.15",
+    "@angular-devkit/build-angular": "~0.803.25",
+    "@angular-devkit/build-ng-packagr": "~0.803.25",
+    "@angular/animations": "^8.2.14",
     "@angular/cdk": "^7.3.7",
-    "@angular/cli": "^7.3.9",
-    "@angular/common": "^7.2.15",
-    "@angular/compiler": "^7.2.15",
-    "@angular/compiler-cli": "^7.2.15",
-    "@angular/core": "^7.2.15",
-    "@angular/forms": "^7.2.15",
-    "@angular/language-service": "^7.2.15",
+    "@angular/cli": "^8.3.25",
+    "@angular/common": "^8.2.14",
+    "@angular/compiler": "^8.2.14",
+    "@angular/compiler-cli": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "@angular/forms": "^8.2.14",
+    "@angular/language-service": "^8.2.14",
     "@angular/material": "^7.3.7",
-    "@angular/platform-browser": "^7.2.15",
-    "@angular/platform-browser-dynamic": "^7.2.15",
-    "@angular/router": "^7.2.15",
+    "@angular/platform-browser": "^8.2.14",
+    "@angular/platform-browser-dynamic": "^8.2.14",
+    "@angular/router": "^8.2.14",
     "@types/ace": "0.0.36",
     "@types/jasmine": "^2.8.5",
     "@types/jasminewd2": "~2.0.3",
@@ -101,6 +98,7 @@
     "karma-coverage-istanbul-reporter": "^1.4.0",
     "karma-jasmine": "^1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "ng-packagr": "^5.4.0",
     "protractor": "^5.2.2",
     "rimraf": "^2.6.2",
     "rollup": "^0.55.0",
@@ -108,11 +106,12 @@
     "rollup-plugin-node-resolve-angular": "^2.0.3",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-uglify": "^3.0.0",
-    "rxjs": "~6.5.2",
+    "rxjs": "~6.5.4",
     "ts-node": "^4.1.0",
+    "tsickle": "^0.37.0",
     "tslint": "^5.9.1",
     "typedoc": "^0.15.0",
-    "typescript": "~3.1.1",
+    "typescript": "~3.5.3",
     "zone.js": "~0.9.1"
   }
 }

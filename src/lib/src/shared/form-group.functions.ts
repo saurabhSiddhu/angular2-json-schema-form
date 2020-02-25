@@ -432,16 +432,16 @@ export function formatFormData(
 
         // If returnEmptyFields === false,
         // only add empty arrays and objects to required keys
-        } else if (schemaType === 'object' && !returnEmptyFields) {
-          (dataMap.get(genericPointer).get('required') || []).forEach(key => {
-            const keySchemaType =
-              dataMap.get(`${genericPointer}/${key}`).get('schemaType');
-            if (keySchemaType === 'array') {
-              JsonPointer.set(formattedData, `${dataPointer}/${key}`, []);
-            } else if (keySchemaType === 'object') {
-              JsonPointer.set(formattedData, `${dataPointer}/${key}`, {});
-            }
-          });
+        } else if (!returnEmptyFields) {
+            (dataMap.get(genericPointer).get('required') || []).forEach(key => {
+              const keySchemaType =
+                dataMap.get(`${genericPointer}/${key}`).get('schemaType');
+              if (keySchemaType === 'array') {
+                JsonPointer.set(formattedData, `${dataPointer}/${key}`, []);
+              } else if (keySchemaType === 'object') {
+                JsonPointer.set(formattedData, `${dataPointer}/${key}`, {});
+              }
+            });
         }
 
         // Finish incomplete 'date-time' entries

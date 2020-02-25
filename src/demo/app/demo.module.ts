@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
 
 import {
   JsonSchemaFormModule, NoFrameworkModule, MaterialDesignFrameworkModule,
-  Bootstrap3FrameworkModule, Bootstrap4FrameworkModule
+  Bootstrap3FrameworkModule, Bootstrap4FrameworkModule, JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService, Framework, Bootstrap3Framework
 } from '../../lib';
 
 // To include JsonSchemaFormModule after downloading from NPM, use this instead:
@@ -42,12 +42,15 @@ import { ActivatedRoute, Router } from '@angular/router';
     NoFrameworkModule, MaterialDesignFrameworkModule,
     Bootstrap3FrameworkModule, Bootstrap4FrameworkModule,
 
-    JsonSchemaFormModule.forRoot(
-      NoFrameworkModule,
-      MaterialDesignFrameworkModule,
-      Bootstrap3FrameworkModule,
-      Bootstrap4FrameworkModule
-    )
+    {
+      ngModule: JsonSchemaFormModule,
+      providers: [
+        JsonSchemaFormService,
+        FrameworkLibraryService,
+        WidgetLibraryService,
+        { provide: Framework, useClass: Bootstrap3Framework, multi: true }
+      ]
+    }
   ],
   bootstrap: [ DemoRootComponent ]
 })
